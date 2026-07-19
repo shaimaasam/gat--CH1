@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GAT 2026 — Chapter 2: Triangles &amp; Circles — Interactive Test Bank</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']], tags:'none' },
+  options: { skipHtmlTags:['script','noscript','style','textarea','pre'] },
+  startup: { ready() { MathJax.startup.defaultReady(); window._mjReady=true; document.dispatchEvent(new Event('mjready')); } }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" async></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f2f4f8;color:#1e2330;font-size:14px;line-height:1.6}
+:root{
+  --navy:#1a2e5a;--teal:#0d6e8a;--gold:#b8862a;--gold-lt:#fdf3e3;
+  --blue-lt:#eaf4f9;--border:#cddde8;--bg:#ffffff;--muted:#5a6a7a;
+  --green:#1b7a4a;--green-lt:#e6f7ee;--red:#c0392b;--red-lt:#fff0f0;
+  --sidebar:220px;--header:52px;
+}
+#app{display:flex;flex-direction:column;min-height:100vh}
+
+/* ── LOCK SCREEN STYLE ── */
+#lock-screen {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: linear-gradient(135deg, var(--navy) 0%, #0d4a6e 100%);
+  z-index: 9999; display: flex; align-items: center; justify-content: center;
+  color: #fff; padding: 20px; direction: rtl;
+}
+.lock-box {
+  background: #ffffff; color: #1e2330; padding: 35px 25px;
+  border-radius: 14px; width: 100%; max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+  border-top: 5px solid var(--gold);
+}
+.lock-box h2 { color: var(--navy); font-size: 20px; margin-bottom: 8px; font-weight: 700; }
+.lock-box p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.lock-input {
+  width: 100%; padding: 12px; border: 1.5px solid var(--border);
+  border-radius: 8px; font-size: 16px; text-align: center;
+  margin-bottom: 15px; outline: none; transition: border-color 0.2s;
+}
+.lock-input:focus { border-color: var(--teal); }
+.lock-btn {
+  width: 100%; background: var(--gold); color: #fff; border: none;
+  padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: background 0.2s;
+}
+.lock-btn:hover { background: #9a6e1f; }
+#lock-error { color: var(--red); font-size: 12px; margin-top: 10px; font-weight: 600; display: none; }
+
+/* ── TOP BAR ── */
+#topbar{
+  position:sticky;top:0;z-index:200;
+  background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:var(--header);
+  box-shadow:0 2px 10px rgba(0,0,0,.4);flex-shrink:0;
+}
+#topbar .brand{display:flex;flex-direction:column;gap:1px}
+#topbar .brand .title{font-size:15px;font-weight:700;letter-spacing:.3px}
+#topbar .brand .sub{font-size:11px;color:#93b8cc;opacity:.9}
+#topbar .controls{display:flex;gap:12px;align-items:center}
+.btn{border:none;border-radius:7px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:600;transition:all .15s}
+.btn-ghost{background:rgba(255,255,255,.12);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{background:#9a6e1f}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:#095870}
+.btn-red {background:var(--red); color:#fff;}
+.btn-red:hover {background:#a0271a;}
+
+#timer-chip{background:#e67e22;border-radius:20px;padding:4px 12px;font-size:12px;color:#fff;font-weight:700;display:flex;align-items:center;gap:5px;transition: background-color 0.3s;}
+#timer-chip.warning-timer{background:#c0392b; animation: pulse 1s infinite alternate;}
+
+@keyframes pulse {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0.85; transform: scale(1.05); }
+}
+
+#score-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:11px;color:#fff;display:flex;align-items:center;gap:5px}
+
+/* ── LAYOUT ── */
+#body{display:flex;flex:1;max-width:1160px;width:100%;margin:0 auto}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar);flex-shrink:0;padding:16px 10px;
+  position:sticky;top:var(--header);height:calc(100vh - var(--header));
+  overflow-y:auto;border-right:1px solid var(--border);background:#fff;
+}
+#sidebar h3{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:0 6px;margin-bottom:8px}
+.lesson-btn{
+  display:block;width:100%;text-align:left;border:none;
+  background:transparent;border-radius:8px;padding:8px 10px;
+  cursor:pointer;margin-bottom:2px;transition:all .15s;
+}
+.lesson-btn:hover{background:#f0f4f8}
+.lesson-btn.active{background:var(--teal);color:#fff}
+.lesson-btn .lid{font-size:13px;font-weight:600}
+.lesson-btn .lsub{font-size:10px;opacity:.65;margin-top:1px}
+.lesson-btn.active .lsub{opacity:.8}
+.lesson-btn .lprog{height:3px;background:rgba(0,0,0,.1);border-radius:2px;margin-top:5px}
+.lesson-btn .lprog-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .3s}
+.lesson-btn.active .lprog{background:rgba(255,255,255,.25)}
+.lesson-btn.active .lprog-fill{background:#fff}
+
+#progress-summary{border-top:1px solid var(--border);padding-top:12px;margin-top:8px}
+#progress-summary .ps-label{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:0 6px;margin-bottom:6px}
+.ps-row{display:flex;justify-content:space-between;padding:2px 6px;font-size:11px;color:var(--muted)}
+.ps-row span:last-child{font-weight:600;color:var(--navy)}
+
+/* ── CONTENT ── */
+#content{flex:1;padding:24px 20px 60px;min-width:0;overflow-y:auto;height:calc(100vh - var(--header));overflow-x:hidden}
+
+/* ── COVER ── */
+#cover{
+  background:linear-gradient(150deg,var(--navy) 0%,#0d4a6e 55%,var(--teal) 100%);
+  border-radius:14px;padding:0;overflow:hidden;margin-bottom:0;color:#fff;
+}
+.cover-top{padding:40px 40px 30px;border-bottom:2px solid rgba(255,255,255,.15)}
+.cover-badge{display:inline-block;background:var(--gold);color:#fff;font-size:10px;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.cover-title{font-size:36px;font-weight:800;line-height:1.15;margin-bottom:6px;letter-spacing:-.5px}
+.cover-sub{font-size:16px;color:#93b8cc;margin-bottom:20px}
+.cover-chips{display:flex;flex-wrap:wrap;gap:8px}
+.cover-chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:5px 12px;font-size:12px;color:#c5dde8}
+.cover-bottom{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:rgba(255,255,255,.1)}
+.cover-stat{background:rgba(255,255,255,.06);padding:18px 20px;text-align:center}
+.cover-stat .sn{font-size:28px;font-weight:800;color:var(--gold);line-height:1}
+.cover-stat .sl{font-size:11px;color:#93b8cc;margin-top:4px;letter-spacing:.5px}
+.cover-footer{padding:16px 40px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#93b8cc;background:rgba(0,0,0,.2)}
+.start-btn{background:var(--gold);color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:24px}
+.start-btn:hover{background:#9a6e1f;transform:translateY(-1px)}
+
+/* ── LESSON HEADER ── */
+.lesson-header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);
+  border-radius:12px;padding:18px 24px;margin-bottom:20px;color:#fff;
+}
+.lh-badge{font-size:9px;font-weight:700;letter-spacing:2.5px;color:#93b8cc;text-transform:uppercase;margin-bottom:4px}
+.lh-title{font-size:20px;font-weight:700}
+.lh-meta{font-size:12px;color:#93b8cc;margin-top:5px;display:flex;gap:16px;flex-wrap:wrap}
+.lh-meta span{display:flex;align-items:center;gap:4px}
+
+/* ── QUESTION CARD ── */
+.qcard{
+  background:#fff;border:1px solid var(--border);
+  border-left:4px solid var(--teal);
+  border-radius:10px;padding:16px 18px;margin-bottom:12px;
+  transition:box-shadow .15s;
+}
+.qcard:hover{box-shadow:0 2px 12px rgba(13,110,138,.1)}
+.qcard.answered{border-left-color:var(--gold)}
+.qcard.correct-card{border-left-color:var(--green); background: var(--green-lt);}
+.qcard.wrong-card{border-left-color:var(--red); background: var(--red-lt);}
+
+.qtop{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.qnum{
+  min-width:28px;height:28px;border-radius:7px;flex-shrink:0;
+  background:var(--navy);color:#fff;display:flex;
+  align-items:center;justify-content:center;
+  font-weight:700;font-size:11px;margin-top:1px;
+}
+.qtext{font-size:14px;color:#1e2330;line-height:1.65}
+.qtext b{font-weight:700;color:var(--navy)}
+
+/* compare box */
+.compare-box{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;
+  margin:8px 0 12px 0;
+}
+.cval{padding:10px 14px;background:var(--blue-lt)}
+.cval:first-child{border-right:1px solid var(--border)}
+.cval-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--teal);text-transform:uppercase;margin-bottom:5px}
+.cval-expr覆{font-size:14px;line-height:1.5}
+
+/* options */
+.opts{padding-left:38px;display:flex;flex-direction:column;gap:5px}
+.opt{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;border:1.5px solid var(--border);
+  border-radius:8px;cursor:pointer;transition:all .15s;
+  font-size:13.5px;line-height:1.5;background:#fff;color:#1e2330;
+}
+.opt:hover{border-color:var(--teal);background:var(--blue-lt)}
+.opt.selected{border-color:var(--navy);background:#eaf1fb}
+.opt.correct{border-color:var(--green);background:var(--green-lt);color:var(--green);font-weight:600}
+.opt.wrong{border-color:var(--red);background:var(--red-lt);color:var(--red)}
+.opt.disabled{pointer-events:none;opacity:0.8}
+
+.opt-bubble{
+  min-width:24px;height:24px;border-radius:50%;
+  background:var(--border);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:11px;flex-shrink:0;transition:background .15s;
+}
+.opt.selected .opt-bubble{background:var(--navy)}
+.opt.correct .opt-bubble{background:var(--green)}
+.opt.wrong .opt-bubble{background:var(--red)}
+
+.answer-reveal{
+  margin-top:8px;margin-left:38px;font-size:12px;
+  display:flex;align-items:center;gap:4px;font-weight:600;
+}
+
+/* ── RESULT PANEL ── */
+.result-panel{
+  background:#fff; border:2px solid var(--gold); border-radius:12px;
+  padding:20px; margin-bottom:20px; text-align:center;
+}
+.result-score{font-size:32px; font-weight:800; color:var(--navy); margin:10px 0}
+.result-meta{display:flex; justify-content:center; gap:20px; font-size:14px; color:var(--muted); margin-bottom:15px}
+
+/* ── LESSON NAV ── */
+.lesson-nav{display:flex;justify-content:space-between;margin-top:20px;gap:10px}
+.lnav-btn{
+  flex:1;border:1.5px solid var(--border);background:#fff;
+  border-radius:10px;padding:12px 16px;cursor:pointer;
+  font-size:13px;transition:all .15s;color:var(--navy);font-weight:500;
+}
+.lnav-btn:hover{border-color:var(--teal);background:var(--blue-lt)}
+.lnav-btn.next{background:var(--teal);border-color:var(--teal);color:#fff}
+.lnav-btn.next:hover{background:#095870}
+
+#toast{
+  position:fixed;bottom:20px;right:20px;z-index:999;
+  background:var(--navy);color:#fff;border-radius:10px;
+  padding:10px 18px;font-size:13px;font-weight:500;
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+#toast.show{opacity:1}
+
+.qfig{margin:8px 0 12px 38px;text-align:center}
+.qfig img{max-width:280px;max-height:220px;border:1px solid var(--border);border-radius:8px;background:#fff;padding:6px}
+@media (max-width:640px){.qfig img{max-width:100%}}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cdd;border-radius:3px}
+</style>
+</head>
+<body>
+
+<div id="lock-screen">
+  <div class="lock-box">
+    <h2>منصة اختبارات الرياضيات GAT 2026</h2>
+    <p>هذا المحتوى محمي وخاص بطلاب الأستاذة شيماء درويش. يرجى إدخال رمز المرور للمتابعة والتدريب.</p>
+    <input type="password" id="password-input" class="lock-input" placeholder="أدخل رمز الدخول السري هنا" onkeypress="handleLockKeyPress(event)">
+    <button class="lock-btn" onclick="checkPassword()">تسجيل الدخول المنصّي</button>
+    <div id="lock-error">❌ رمز المرور غير صحيح! يرجى التواصل مع المعلمة.</div>
+  </div>
+</div>
+
+<div id="app">
+  <div id="topbar">
+    <div class="brand">
+      <div class="title">GAT 2026 — Interactive Test Bank</div>
+      <div class="sub">Chapter 1: Basics &amp; Founding · Mrs. Shaimaa Darwish</div>
+    </div>
+    <div class="controls">
+      <div id="timer-chip" style="display:none;">⏱️ <span id="timer-display">00:00</span></div>
+      <div id="score-chip">Score: <span id="score-display">0 / 0</span></div>
+      <button class="btn btn-ghost" onclick="showCover()">Main Cover</button>
+    </div>
+  </div>
+
+  <div id="body">
+    <div id="sidebar">
+      <h3>Lessons Quizzes</h3>
+      <div id="lesson-nav-list"></div>
+      <div id="progress-summary">
+        <div class="ps-label">Overall Stats</div>
+        <div class="ps-row"><span>Quizzes Solved</span><span id="ps-answered">0</span></div>
+        <div class="ps-row"><span>Total Lessons</span><span id="ps-total">0</span></div>
+        <div class="ps-row"><span>Total Correct Qs</span><span id="ps-correct" style="color:var(--green)">0</span></div>
+      </div>
+    </div>
+    <div id="content">
+      <div id="main-area"></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const CORRECT_PASSWORD = "GAT2026";
+
+function checkPassword() {
+  const input = document.getElementById("password-input").value;
+  if(input === CORRECT_PASSWORD) {
+    document.getElementById("lock-screen").style.display = "none";
+    showToast("🔓 تم التحقق بنجاح! أهلاً بك في المنصة.", "var(--green)");
+  } else {
+    document.getElementById("lock-error").style.display = "block";
+  }
+}
+
+function handleLockKeyPress(e) {
+  if (e.key === 'Enter') {
+    checkPassword();
+  }
+}
+
+const COMPARE_OPTS = [
+  "The first value is greater",
+  "The second value is greater",
+  "The two values are equal",
+  "The data are insufficient"
+];
+
+const LESSONS = [
+ {
+  "id": "1.1",
+  "title": "Basic Operations & Arithmetic",
+  "qs": [
+   {
+    "n": 1,
+    "type": "mcq",
+    "t": "Find the sum of 35 + 6 + 68 + 65 + 94 + 132",
+    "o": [
+     "420",
+     "109",
+     "350",
+     "400"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 2,
+    "type": "mcq",
+    "t": "Find the sum of 700 + 850 + 990 + 650 + 300 + 150 + 10 + 350 + 310 + 690",
+    "o": [
+     "6000",
+     "5000",
+     "5500",
+     "4500"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 3,
+    "type": "mcq",
+    "t": "Find the result of 10001 × 30003",
+    "o": [
+     "360000030",
+     "300630000",
+     "300060003",
+     "300060030"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 4,
+    "type": "mcq",
+    "t": "Find the result of 30294 ÷ 17",
+    "o": [
+     "1755",
+     "1782",
+     "4327",
+     "154"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 5,
+    "type": "mcq",
+    "t": "Find the result of 87956220 ÷ 284",
+    "o": [
+     "309704",
+     "309804",
+     "309705",
+     "309706"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 6,
+    "type": "mcq",
+    "t": "Divide 885 ÷ 29",
+    "o": [
+     "30 + 15/29",
+     "30 + 10/29",
+     "30 + 12/29",
+     "30 + 11/29"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 7,
+    "type": "mcq",
+    "t": "Find the value of $\\frac{88+88+88}{88}$",
+    "o": [
+     "83",
+     "3",
+     "8",
+     "36"
+    ],
+    "a": "B"
+   }
+  ]
+ },
+ {
+  "id": "1.2",
+  "title": "Order of Operations (BODMAS)",
+  "qs": [
+   {
+    "n": 8,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "First value = $-17 \\left( \\frac{29}{-15} \\right)$",
+    "B": "Second value = $-18 \\left( \\frac{-36}{-25} \\right)$",
+    "a": "B"
+   },
+   {
+    "n": 9,
+    "type": "mcq",
+    "t": "Which of the following is TRUE?",
+    "o": [
+     "$2 \\times 2 + 1 = 6$",
+     "$16 + 2 \\div 2 = 9$",
+     "$2 + 1 \\times 3 = 5$",
+     "$2 + 1 \\times 2 = 6$"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 10,
+    "type": "mcq",
+    "t": "What is the greatest value?",
+    "o": [
+     "$1 + \\frac{1}{4}$",
+     "$1 - \\frac{1}{4}$",
+     "$1 \\div \\frac{1}{4}$",
+     "$1 \\times \\frac{1}{4}$"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 11,
+    "type": "mcq",
+    "t": "Perform: 120 − 64 ÷ 8 × 4",
+    "o": [
+     "96",
+     "112",
+     "104",
+     "88"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 12,
+    "type": "mcq",
+    "t": "Find the value of (74 + 36) ÷ 10 + 25 × 4",
+    "o": [
+     "210",
+     "111",
+     "218",
+     "196"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 13,
+    "type": "mcq",
+    "t": "Find the answer of (157 + 43) ÷ 10 + 24 × 5",
+    "o": [
+     "140",
+     "150",
+     "130",
+     "120"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 14,
+    "type": "mcq",
+    "t": "Find the value of 20 ÷ 4 + 17 × (9 − 6)",
+    "o": [
+     "56",
+     "48",
+     "60",
+     "51"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 15,
+    "type": "mcq",
+    "t": "Find the value of 12 × 5 + 12 × 3 + 2 × 12",
+    "o": [
+     "120",
+     "150",
+     "240",
+     "80"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 16,
+    "type": "mcq",
+    "t": "Find the value of 475 × 36 + 475 × 63 + 475",
+    "o": [
+     "48000",
+     "50000",
+     "47500",
+     "4570"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 17,
+    "type": "mcq",
+    "t": "Find the value of $\\frac{-14 \\times 25 + 7 \\times 25}{7}$",
+    "o": [
+     "25",
+     "−25",
+     "−7",
+     "75"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 18,
+    "type": "mcq",
+    "t": "Evaluate $\\frac{10}{15} \\times 30 - \\frac{10}{6} \\times 30$",
+    "o": [
+     "30",
+     "20",
+     "−20",
+     "−30"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 19,
+    "type": "mcq",
+    "t": "Find the value of $\\frac{600}{100} + \\frac{6}{100} \\div \\frac{6}{1000}$",
+    "o": [
+     "6",
+     "16",
+     "12",
+     "10"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 20,
+    "type": "mcq",
+    "t": "Find the value of $1 + \\frac{1}{2} \\div \\frac{1}{4}$",
+    "o": [
+     "6",
+     "3",
+     "12",
+     "10"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 21,
+    "type": "mcq",
+    "t": "Find $(((x \\div 2) \\div 2) \\div 2) \\div 2$",
+    "o": [
+     "$16x$",
+     "$\\frac{x}{16}$",
+     "$\\frac{x}{8}$",
+     "$\\frac{x}{81}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 22,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "Value A = −1 − (−1) − (−1)",
+    "B": "Value B = (−1)(−1)",
+    "a": "C"
+   },
+   {
+    "n": 23,
+    "type": "mcq",
+    "t": "Find: $\\frac{|-6| - |-8|}{-|-4|}$",
+    "o": [
+     "$1$",
+     "$\\frac{1}{4}$",
+     "$\\frac{1}{2}$",
+     "$-\\frac{1}{2}$"
+    ],
+    "a": "C"
+   }
+  ]
+ },
+ {
+  "id": "1.3",
+  "title": "Comparisons & Inequalities",
+  "qs": [
+   {
+    "n": 24,
+    "type": "cmp",
+    "p": "Excluding zero, compare the product of the numbers",
+    "A": "Value A: product from −2 to 7",
+    "B": "Value B: product from −7 to 2",
+    "a": "A"
+   },
+   {
+    "n": 25,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = 20 × 52",
+    "B": "Second value = 19 × 53",
+    "a": "A"
+   },
+   {
+    "n": 26,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = 112 × 97",
+    "B": "Second value = 111 × 98",
+    "a": "B"
+   },
+   {
+    "n": 27,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = 112 × 89 × 35",
+    "B": "Second value = 89 × 35 × 121",
+    "a": "B"
+   },
+   {
+    "n": 28,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $555^2$",
+    "B": "Second value = $222^2 + 333^2$",
+    "a": "A"
+   },
+   {
+    "n": 29,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $707^2$",
+    "B": "Second value = $606^2 + 505^2$",
+    "a": "B"
+   },
+   {
+    "n": 30,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = 2 × 3 × 4 × 5 × 6 × 7",
+    "B": "Second value = 7 × 8 × 9 × 10",
+    "a": "C"
+   },
+   {
+    "n": 31,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = 2 × 5 × 4 × 3 × 2 × 3",
+    "B": "Second value = 8 × 9 × 10",
+    "a": "C"
+   },
+   {
+    "n": 32,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $4^7$",
+    "B": "Second value = 20 × 16 × 32",
+    "a": "A"
+   },
+   {
+    "n": 33,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $3^4 \\times 3^4 \\times 3^4$",
+    "B": "Second value = $4^3 \\times 4^3 \\times 4^3$",
+    "a": "A"
+   },
+   {
+    "n": 34,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $14^2$",
+    "B": "Second value = $2 \\times 3^4 + 5$",
+    "a": "A"
+   },
+   {
+    "n": 35,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $3^{75}$",
+    "B": "Second value = $2^{100}$",
+    "a": "A"
+   },
+   {
+    "n": 36,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = 7 × 7 × 7 × y",
+    "B": "Second value = 5 × 5 × 5 × 5",
+    "a": "D"
+   },
+   {
+    "n": 37,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\frac{-4}{9}$",
+    "B": "Second value = $\\frac{-9}{4}$",
+    "a": "A"
+   },
+   {
+    "n": 38,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = −(−x)",
+    "B": "Second value = 0",
+    "a": "D"
+   },
+   {
+    "n": 39,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $60^2$",
+    "B": "Second value = 60 × 24 + 60 × 25",
+    "a": "A"
+   },
+   {
+    "n": 40,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $(2.5)^2$",
+    "B": "Second value = 6.5",
+    "a": "B"
+   },
+   {
+    "n": 41,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $(1.25)^2$",
+    "B": "Second value = 2",
+    "a": "B"
+   }
+  ]
+ },
+ {
+  "id": "1.4",
+  "title": "Decimal Numbers",
+  "qs": [
+   {
+    "n": 42,
+    "type": "mcq",
+    "t": "What is the result of 0.001 + 0.02 + 0.3 + 4 + 50?",
+    "o": [
+     "54.02311",
+     "54.32100",
+     "54.12300",
+     "50.36100"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 43,
+    "type": "mcq",
+    "t": "Determine the value of 0.001 + 0.001 + 0.01 + 0.1",
+    "o": [
+     "0.112",
+     "0.1011",
+     "0.111",
+     "0.123"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 44,
+    "type": "mcq",
+    "t": "Evaluate the expression $0.1 + 0.1^2 + 0.1^3 + 0.1^4$",
+    "o": [
+     "0.1110",
+     "0.1111",
+     "0.1011",
+     "0.1000"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 45,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "Value A = 0.3 + 0.07 + 0.009",
+    "B": "Value B = 0.379",
+    "a": "C"
+   },
+   {
+    "n": 46,
+    "type": "mcq",
+    "t": "What is the result of $\\frac{700}{10} + \\frac{7}{100} + \\frac{7}{1000} + \\frac{1}{100}$?",
+    "o": [
+     "7.777",
+     "70.078",
+     "70.077",
+     "70.087"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 47,
+    "type": "mcq",
+    "t": "What is the result of $\\frac{8}{0.01} + \\frac{8}{0.1} + \\frac{8}{1000} + \\frac{80}{1000}$?",
+    "o": [
+     "88.88",
+     "80.088",
+     "880.088",
+     "888.008"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 48,
+    "type": "mcq",
+    "t": "Find: $\\frac{50}{1000} + \\frac{55}{100} + \\frac{505}{10}$",
+    "o": [
+     "50.05",
+     "51.1",
+     "50.15",
+     "51.01"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 49,
+    "type": "mcq",
+    "t": "Find: 1 − 0.0001",
+    "o": [
+     "0.0999",
+     "0.0009",
+     "0.9999",
+     "0.2"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 50,
+    "type": "mcq",
+    "t": "Find the answer of $\\frac{109.8 \\times 9.8}{4.01}$",
+    "o": [
+     "270",
+     "244",
+     "225",
+     "275"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 51,
+    "type": "mcq",
+    "t": "Approximate $\\frac{0.75 \\times 87.999}{1.99}$",
+    "o": [
+     "22",
+     "33",
+     "19",
+     "49"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 52,
+    "type": "mcq",
+    "t": "Find the approximate value: 0.499 × 0.75 × 8",
+    "o": [
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 53,
+    "type": "mcq",
+    "t": "Calculate the product of 0.314 × 1.86",
+    "o": [
+     "0.57645",
+     "0.36547",
+     "0.58404",
+     "0.35460"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 54,
+    "type": "mcq",
+    "t": "Calculate the product of 3.94 × 7.89",
+    "o": [
+     "13.2854",
+     "31.668",
+     "31.866",
+     "31.0866"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 55,
+    "type": "mcq",
+    "t": "Evaluate $\\frac{1}{0.2} \\times \\frac{500}{0.5} \\times \\frac{4}{10000}$",
+    "o": [
+     "0",
+     "6",
+     "2",
+     "18"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 56,
+    "type": "mcq",
+    "t": "Find the value of $\\frac{1}{0.5} \\times \\frac{1}{0.5} \\times \\frac{1}{2}$",
+    "o": [
+     "2",
+     "5",
+     "1",
+     "0.5"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 57,
+    "type": "mcq",
+    "t": "What is the value of $9 \\times \\frac{20}{2.5} - 0.72 \\times 100$?",
+    "o": [
+     "1",
+     "20",
+     "9",
+     "0"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 58,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "First value = 0.41",
+    "B": "Second value = 0.409",
+    "a": "A"
+   },
+   {
+    "n": 59,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "First value = 0.3 × 0.3 × 0.003",
+    "B": "Second value = 0.000027",
+    "a": "A"
+   },
+   {
+    "n": 60,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "First value = 1500 gm",
+    "B": "Second value = 1.5 kg",
+    "a": "C"
+   },
+   {
+    "n": 61,
+    "type": "mcq",
+    "t": "If a 0.004-liter container is used to fill a 4-liter container, how many times?",
+    "o": [
+     "400",
+     "3000",
+     "1000",
+     "1500"
+    ],
+    "a": "C"
+   }
+  ]
+ },
+ {
+  "id": "1.5",
+  "title": "Fractions",
+  "qs": [
+   {
+    "n": 62,
+    "type": "mcq",
+    "t": "Which of the following is bigger?",
+    "o": [
+     "$\\frac{15}{12}$",
+     "$\\frac{4}{3}$",
+     "$\\frac{9}{10}$",
+     "$\\frac{12}{10}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 63,
+    "type": "mcq",
+    "t": "Calculate $\\frac{2}{4} + \\frac{1}{8} + \\frac{7}{8} + \\frac{1}{2} + \\frac{16}{9} + \\frac{2}{9}$",
+    "o": [
+     "2",
+     "3",
+     "1",
+     "4"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 64,
+    "type": "mcq",
+    "t": "Find $\\frac{3/4}{2/8}$",
+    "o": [
+     "3",
+     "2",
+     "4",
+     "8"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 65,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\frac{3}{4} - \\frac{7}{8}$",
+    "B": "Second value = $\\frac{5}{8} - \\frac{1}{2}$",
+    "a": "B"
+   },
+   {
+    "n": 66,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\frac{9}{11} - \\frac{11}{9}$",
+    "B": "Second value = $\\frac{11}{9} - \\frac{9}{11}$",
+    "a": "B"
+   },
+   {
+    "n": 67,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\frac{12}{8} - \\frac{8}{12}$",
+    "B": "Second value = $\\frac{8}{12} - \\frac{12}{8}$",
+    "a": "A"
+   },
+   {
+    "n": 68,
+    "type": "cmp",
+    "p": "Compare Value A vs Value B",
+    "A": "Value A = $\\left(1 + \\frac{1}{4}\\right)\\left(1 + \\frac{1}{5}\\right)$",
+    "B": "Value B = $\\left(1 + \\frac{1}{2}\\right)\\left(1 + \\frac{1}{3}\\right)$",
+    "a": "B"
+   },
+   {
+    "n": 69,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $5 - \\frac{15}{5}$",
+    "B": "Value B = $-5 - \\frac{1}{5}$",
+    "a": "A"
+   },
+   {
+    "n": 70,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\frac{9}{4}$",
+    "B": "Second value = $\\frac{1}{8} + \\frac{340}{18}$",
+    "a": "B"
+   },
+   {
+    "n": 71,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\frac{1}{1} - \\frac{1}{2}$",
+    "B": "Value B = $\\frac{3}{8}$",
+    "a": "A"
+   },
+   {
+    "n": 72,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\frac{1}{7} + \\frac{1}{2}$",
+    "B": "Value B = $\\frac{2}{15}$",
+    "a": "A"
+   },
+   {
+    "n": 73,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\frac{4.5}{1.5}$",
+    "B": "Value B = $\\frac{40.5}{1.5}$",
+    "a": "B"
+   },
+   {
+    "n": 74,
+    "type": "mcq",
+    "t": "Calculate $\\left(1+\\frac{1}{2}\\right)\\left(1+\\frac{1}{3}\\right)\\left(1+\\frac{1}{4}\\right)\\left(1+\\frac{1}{5}\\right)$",
+    "o": [
+     "6",
+     "3",
+     "2",
+     "0"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 75,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\left(3 \\times \\frac{4}{5}\\right)\\left(5 \\times \\frac{3}{4}\\right)\\left(4 \\times \\frac{5}{3}\\right)$",
+    "B": "Value B = 20",
+    "a": "A"
+   },
+   {
+    "n": 76,
+    "type": "mcq",
+    "t": "Calculate $\\frac{1}{1} + \\frac{2}{1} + \\frac{7}{1}$",
+    "o": [
+     "10",
+     "12",
+     "21",
+     "8"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 77,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\frac{1}{2} + \\frac{1}{3}$",
+    "B": "Value B = $\\frac{1}{2+3}$",
+    "a": "A"
+   },
+   {
+    "n": 78,
+    "type": "cmp",
+    "p": "Compare (x > 0)",
+    "A": "Value A = $1 + \\frac{1}{x}$",
+    "B": "Value B = $1 - \\frac{1}{x}$",
+    "a": "A"
+   },
+   {
+    "n": 79,
+    "type": "mcq",
+    "t": "Find: $\\frac{1 + \\frac{1}{x}}{x - \\frac{1}{x}}$",
+    "o": [
+     "$\\frac{1}{1+x}$",
+     "$\\frac{1}{1-x}$",
+     "$\\frac{1}{x-1}$",
+     "$\\frac{1}{x}$"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 80,
+    "type": "mcq",
+    "t": "Evaluate $\\frac{1}{1 + \\frac{1}{1 + \\frac{1}{4}}}$",
+    "o": [
+     "$\\frac{1}{4}$",
+     "$\\frac{2}{3}$",
+     "$\\frac{1}{9}$",
+     "$\\frac{5}{9}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 81,
+    "type": "mcq",
+    "t": "Simplify $\\frac{9x^2 + 3x}{-3x^2 - x}$",
+    "o": [
+     "3",
+     "−3",
+     "x − 1",
+     "−3x"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 82,
+    "type": "mcq",
+    "t": "Given $f = \\frac{5}{9}m + 32$, find m in terms of f.",
+    "o": [
+     "$m = \\frac{9}{5}f - 32$",
+     "$m = f(\\frac{9}{5} - 32)$",
+     "$m = \\frac{1}{9}(f - 32)$",
+     "$m = \\frac{9}{5}(f + 32)$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 83,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = half of one-fifth",
+    "B": "Value B = three-quarters of one-tenth",
+    "a": "A"
+   },
+   {
+    "n": 84,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = one-fourth of 8",
+    "B": "Value B = one-eighth of 4",
+    "a": "A"
+   },
+   {
+    "n": 85,
+    "type": "mcq",
+    "t": "What is a possible value for x where $\\frac{3}{5} < x < \\frac{4}{5}$?",
+    "o": [
+     "$\\frac{1}{3}$",
+     "$\\frac{3}{10}$",
+     "$\\frac{1}{2}$",
+     "$\\frac{11}{15}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 86,
+    "type": "mcq",
+    "t": "What is a possible value for x where $\\frac{3}{5} < x < \\frac{4}{5}$?",
+    "o": [
+     "$\\frac{1}{3}$",
+     "$\\frac{2}{3}$",
+     "$\\frac{1}{2}$",
+     "$\\frac{3}{2}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 87,
+    "type": "mcq",
+    "t": "Find the result of adding $\\frac{3}{40}$ to itself 20 times",
+    "o": [
+     "$\\frac{3}{2}$",
+     "$\\frac{1}{2}$",
+     "$\\frac{2}{3}$",
+     "$\\frac{1}{3}$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 88,
+    "type": "mcq",
+    "t": "If one truck fills 3 m³, how many trucks are needed to fill 14 m³?",
+    "o": [
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 89,
+    "type": "mcq",
+    "t": "There are 83 students; each bus fits 24 students. How many buses are needed at least?",
+    "o": [
+     "6",
+     "4",
+     "5",
+     "3"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 90,
+    "type": "mcq",
+    "t": "A triangle with sides 5 cm and 9 cm. Which is NOT suitable as a third side?",
+    "o": [
+     "4",
+     "10",
+     "6",
+     "8"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 91,
+    "type": "cmp",
+    "p": "Compare the two values",
+    "A": "First value = 1500 gm",
+    "B": "Second value = 1.5 kg",
+    "a": "C"
+   },
+   {
+    "n": 92,
+    "type": "cmp",
+    "p": "Compare the price per liter",
+    "A": "A: 2 liters of oil for 13 SR",
+    "B": "B: 5 liters of oil for 28 SR",
+    "a": "A"
+   },
+   {
+    "n": 93,
+    "type": "cmp",
+    "p": "Compare the price per tire",
+    "A": "Value A: 4 tires = 750 SR (187.5 SR/tire)",
+    "B": "Value B: 2 tires = 350 SR (175 SR/tire)",
+    "a": "A"
+   }
+  ]
+ },
+ {
+  "id": "1.6",
+  "title": "Radicals & Square Roots",
+  "qs": [
+   {
+    "n": 94,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\sqrt{10} + \\sqrt{10}$",
+    "B": "Second value = $\\sqrt{20}$",
+    "a": "A"
+   },
+   {
+    "n": 95,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\sqrt{30}$",
+    "B": "Second value = $\\sqrt{2500} - \\sqrt{1600}$",
+    "a": "B"
+   },
+   {
+    "n": 96,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "First value = $\\sqrt{200}$",
+    "B": "Second value = $\\sqrt{39756}$",
+    "a": "B"
+   },
+   {
+    "n": 97,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\sqrt{64 + 36}$",
+    "B": "Value B = $\\sqrt{64} + \\sqrt{36}$",
+    "a": "B"
+   },
+   {
+    "n": 98,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\sqrt{3}$",
+    "B": "Value B = $1 + \\sqrt{2}$",
+    "a": "B"
+   },
+   {
+    "n": 99,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\sqrt{3}$",
+    "B": "Value B = $\\sqrt{1+2}$",
+    "a": "C"
+   },
+   {
+    "n": 100,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $7\\sqrt{6}$",
+    "B": "Value B = $6\\sqrt{7}$",
+    "a": "A"
+   },
+   {
+    "n": 101,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\sqrt{6+\\sqrt{11}} - \\sqrt{6-\\sqrt{11}}$",
+    "B": "Value B = $\\sqrt{2}$",
+    "a": "C"
+   },
+   {
+    "n": 102,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $3 + 2\\sqrt{2}$",
+    "B": "Value B = $3 + 3\\sqrt{2}$",
+    "a": "B"
+   },
+   {
+    "n": 103,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\sqrt{99}$",
+    "B": "Value B = $\\sqrt{11} + \\sqrt{51}$",
+    "a": "B"
+   },
+   {
+    "n": 104,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{81 \\times 81 \\times 81 \\times 81}$",
+    "o": [
+     "$9^4$",
+     "$3^4$",
+     "$3^3$",
+     "$3^n$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 105,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt[4]{81}$",
+    "o": [
+     "$\\frac{1}{3^2}$",
+     "$\\frac{4}{3}$",
+     "$\\frac{3}{2}$",
+     "3"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 106,
+    "type": "mcq",
+    "t": "If $\\frac{1}{9} + \\frac{1}{9} + \\frac{1}{9} + \\ldots$ (n terms) = $\\frac{20}{9}$, how many terms?",
+    "o": [
+     "15",
+     "19",
+     "20",
+     "18"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 107,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt[4]{256}$",
+    "o": [
+     "4",
+     "2",
+     "1",
+     "3"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 108,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt[10]{2^8}$",
+    "o": [
+     "$2^{8.0}$",
+     "$2^{0.8}$",
+     "$2^{0.6}$",
+     "$2^{0.4}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 109,
+    "type": "mcq",
+    "t": "Find the tenth root of 256",
+    "o": [
+     "$2^{0.8}$",
+     "$2^{0.6}$",
+     "$3^{0.8}$",
+     "$10^8$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 110,
+    "type": "mcq",
+    "t": "Find the tenth root of $27 \\times 2^3$",
+    "o": [
+     "$3^{0.3}$",
+     "$6^{0.6}$",
+     "$3^{0.6}$",
+     "$6^{0.3}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 111,
+    "type": "mcq",
+    "t": "Evaluate $\\frac{1}{2} \\times \\sqrt{\\frac{1}{4}}$",
+    "o": [
+     "$\\frac{1}{4}$",
+     "$\\frac{1}{2}$",
+     "1",
+     "$\\frac{1}{8}$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 112,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{3^2 \\times 2 + 4^2 \\times 2}$",
+    "o": [
+     "$15\\sqrt{2}$",
+     "$20\\sqrt{2}$",
+     "$15\\sqrt{3}$",
+     "$5\\sqrt{2}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 113,
+    "type": "mcq",
+    "t": "Simplify $\\sqrt{50} + \\sqrt{72} - \\sqrt{2}$",
+    "o": [
+     "13",
+     "$10\\sqrt{2}$",
+     "5",
+     "7"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 114,
+    "type": "mcq",
+    "t": "Simplify $\\sqrt{8} + \\sqrt{8}$",
+    "o": [
+     "$4\\sqrt{2}$",
+     "2",
+     "8",
+     "6"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 115,
+    "type": "mcq",
+    "t": "Simplify $\\frac{\\sqrt{2} + \\sqrt{6}}{\\sqrt{2}}$",
+    "o": [
+     "$2\\sqrt{2}$",
+     "5",
+     "8",
+     "$1 + \\sqrt{3}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 116,
+    "type": "mcq",
+    "t": "Simplify $\\sqrt{50} + \\sqrt{8} - \\sqrt{2}$",
+    "o": [
+     "$4\\sqrt{2}$",
+     "$\\sqrt{2}$",
+     "$6\\sqrt{2}$",
+     "$5\\sqrt{2}$"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 117,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{144}$",
+    "o": [
+     "$3\\sqrt{5}$",
+     "16",
+     "12",
+     "14"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 118,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{88 + (2-11)^2}$",
+    "o": [
+     "14",
+     "6",
+     "13",
+     "18"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 119,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{\\frac{1}{4}}$",
+    "o": [
+     "$\\frac{1}{4}$",
+     "$\\frac{1}{2}$",
+     "$\\frac{2}{3}$",
+     "$\\frac{1}{3}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 120,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{4 + 5}$",
+    "o": [
+     "1",
+     "2",
+     "3",
+     "8"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 121,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{61 + 60}$",
+    "o": [
+     "8",
+     "11",
+     "29",
+     "12"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 122,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt[3]{27}$",
+    "o": [
+     "9",
+     "3",
+     "27",
+     "$30^{0.8}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 123,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt{\\frac{8}{2}}$",
+    "o": [
+     "1",
+     "64",
+     "2",
+     "8"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 124,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt[3]{512}$",
+    "o": [
+     "8",
+     "4",
+     "32",
+     "16"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 125,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt{36}$",
+    "o": [
+     "6",
+     "4",
+     "2",
+     "18"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 126,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt{\\frac{80}{5}} - \\sqrt{\\frac{4}{5}}$",
+    "o": [
+     "zero",
+     "$\\frac{10 - 2\\sqrt{5}}{5}$",
+     "$\\frac{20 - 2\\sqrt{5}}{5}$",
+     "$\\frac{20 - 4\\sqrt{5}}{5}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 127,
+    "type": "mcq",
+    "t": "Evaluate $\\sqrt{1}$",
+    "o": [
+     "2",
+     "28",
+     "1",
+     "$2\\sqrt{2}$"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 128,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt{36} - \\sqrt{36}$",
+    "o": [
+     "3",
+     "0",
+     "−3",
+     "$2\\sqrt{3}$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 129,
+    "type": "mcq",
+    "t": "Find the value of $\\sqrt{\\frac{80}{5}} - \\sqrt{4^2}$",
+    "o": [
+     "2",
+     "$2\\sqrt{2}$",
+     "0",
+     "$4\\sqrt{2}$"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 130,
+    "type": "mcq",
+    "t": "Simplify $\\frac{1}{2x} - \\frac{1}{2x+4}$",
+    "o": [
+     "$\\frac{1}{\\sqrt{2+4x}}$",
+     "$\\frac{4x+4}{2x^2+4x}$",
+     "$\\frac{1}{x^2+2x}$",
+     "$\\frac{x}{x^2+4x}$"
+    ],
+    "a": "C"
+   }
+  ]
+ },
+ {
+  "id": "1.7",
+  "title": "Divisibility & Prime Numbers",
+  "qs": [
+   {
+    "n": 131,
+    "type": "mcq",
+    "t": "Which of the following is a prime number?",
+    "o": [
+     "1111",
+     "1101",
+     "111",
+     "101"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 132,
+    "type": "mcq",
+    "t": "How many prime numbers are between 20 and 30?",
+    "o": [
+     "6",
+     "0",
+     "2",
+     "5"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 133,
+    "type": "mcq",
+    "t": "Find the value of K which makes 39K2 divisible by 4.",
+    "o": [
+     "6",
+     "0",
+     "2",
+     "5"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 134,
+    "type": "mcq",
+    "t": "Which number is divisible by 11 but NOT by 4?",
+    "o": [
+     "2452",
+     "8129",
+     "3156",
+     "2341"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 135,
+    "type": "mcq",
+    "t": "Find the value of K which makes 32K1 divisible by 3.",
+    "o": [
+     "4",
+     "1",
+     "2",
+     "0"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 136,
+    "type": "mcq",
+    "t": "Which of the following numbers is exactly divisible by 9?",
+    "o": [
+     "31562",
+     "2456",
+     "341",
+     "3456"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 137,
+    "type": "mcq",
+    "t": "What is the remainder when 17 is divided by 3?",
+    "o": [
+     "4",
+     "0",
+     "2",
+     "1"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 138,
+    "type": "mcq",
+    "t": "How many numbers from 1 to 40 contain digit 2, 3, or both?",
+    "o": [
+     "22",
+     "24",
+     "23",
+     "20"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 139,
+    "type": "mcq",
+    "t": "Which of the following is divisible by 2?",
+    "o": [
+     "Units digit is 2, 4, 6, 8, or 0",
+     "Units digit is 1, 3, 5, 7, or 9",
+     "Sum of all digits is even",
+     "The number is greater than 2"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 140,
+    "type": "mcq",
+    "t": "What is the smallest number subtracted from 734 to make it divisible by 27?",
+    "o": [
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 141,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = the largest prime factor of 130",
+    "B": "Value B = 15",
+    "a": "B"
+   },
+   {
+    "n": 142,
+    "type": "mcq",
+    "t": "Let $2^{15}$ be divisible by x; which can be x?",
+    "o": [
+     "20",
+     "30",
+     "12",
+     "32"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 143,
+    "type": "mcq",
+    "t": "Smallest number subtracted from 1357 to make it divisible by 9?",
+    "o": [
+     "5",
+     "7",
+     "8",
+     "6"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 144,
+    "type": "mcq",
+    "t": "If 3 is next to 7 and not next to 5, and 7 is next to 3 not next to 5, the number is not divisible by 5.",
+    "o": [
+     "1537",
+     "1735",
+     "5173",
+     "3751"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 145,
+    "type": "mcq",
+    "t": "Distribute equally among 8, 9, or 12 people with no remainder. What amount?",
+    "o": [
+     "440",
+     "480",
+     "434",
+     "864"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 146,
+    "type": "mcq",
+    "t": "Which is divisible by 8, 9 and 12?",
+    "o": [
+     "3540",
+     "2880",
+     "3210",
+     "6320"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 147,
+    "type": "mcq",
+    "t": "Find the value of 8n + 6 where n is an integer.",
+    "o": [
+     "20",
+     "40",
+     "30",
+     "16"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 148,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = distinct prime factors of 30",
+    "B": "Value B = distinct prime factors of 60",
+    "a": "C"
+   }
+  ]
+ },
+ {
+  "id": "1.8",
+  "title": "Powers & Exponents",
+  "qs": [
+   {
+    "n": 149,
+    "type": "mcq",
+    "t": "Find $5^3 \\times 5^4$",
+    "o": [
+     "$5^7$",
+     "$5^{12}$",
+     "$25^4$",
+     "$5^4$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 150,
+    "type": "mcq",
+    "t": "Find $(4^3)^5$",
+    "o": [
+     "$4^8$",
+     "$4^{15}$",
+     "$4^{18}$",
+     "$4^5$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 151,
+    "type": "mcq",
+    "t": "Simplify $\\frac{3^{12}}{3^4}$",
+    "o": [
+     "$3^{16}$",
+     "$3^8$",
+     "$3^{48}$",
+     "$3^3$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 152,
+    "type": "mcq",
+    "t": "Simplify $\\frac{10^4}{10^{-4}}$",
+    "o": [
+     "$10^0$",
+     "$10^8$",
+     "$10^7$",
+     "$10^1$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 153,
+    "type": "mcq",
+    "t": "Find $\\left(\\frac{3}{2}\\right)^{-4}$",
+    "o": [
+     "$\\left(\\frac{2}{3}\\right)^4$",
+     "$\\left(\\frac{3}{2}\\right)^4$",
+     "$\\left(\\frac{3}{2}\\right)^{-4}$",
+     "$\\left(\\frac{2}{3}\\right)^{-4}$"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 154,
+    "type": "mcq",
+    "t": "Find $7^0$",
+    "o": [
+     "0",
+     "1",
+     "7",
+     "Undefined"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 155,
+    "type": "mcq",
+    "t": "Find $1^{100} + 100^1$",
+    "o": [
+     "100",
+     "1000",
+     "101",
+     "200"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 156,
+    "type": "mcq",
+    "t": "Simplify $(-x)^{11}$",
+    "o": [
+     "$x^{11}$",
+     "$-x^{11}$",
+     "$11x$",
+     "$11 - x$"
+    ],
+    "a": "B"
+   },
+   {
+    "n": 157,
+    "type": "mcq",
+    "t": "Evaluate $x^n \\times x^{-n}$",
+    "o": [
+     "$x^{2n}$",
+     "1",
+     "0",
+     "x"
+    ],
+    "a": "B"
+   }
+  ]
+ },
+ {
+  "id": "1.9",
+  "title": "Negative Exponents & Laws of Indices",
+  "qs": [
+   {
+    "n": 158,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $(-8)^9$",
+    "B": "Value B = $(-5)^6$",
+    "a": "B"
+   },
+   {
+    "n": 159,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\left(-\\frac{1}{2}\\right)^8$",
+    "B": "Value B = $\\left(-\\frac{1}{2}\\right)^5$",
+    "a": "A"
+   },
+   {
+    "n": 160,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\left(-\\frac{3}{4}\\right)^4$",
+    "B": "Value B = $\\left(-\\frac{3}{4}\\right)^9$",
+    "a": "A"
+   },
+   {
+    "n": 161,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $2^{-6}$",
+    "B": "Value B = $2^{-7}$",
+    "a": "A"
+   },
+   {
+    "n": 162,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\left(\\frac{2}{3}\\right)^{-3} \\times (4^{-1})^{-4}$",
+    "B": "Value B = $\\frac{1}{2}$",
+    "a": "A"
+   },
+   {
+    "n": 163,
+    "type": "mcq",
+    "t": "Simplify $\\frac{(6^2)^6}{6^{-4}}$",
+    "o": [
+     "$6^8$",
+     "$6^{10}$",
+     "$6^{12}$",
+     "$6^{16}$"
+    ],
+    "a": "D"
+   },
+   {
+    "n": 164,
+    "type": "mcq",
+    "t": "Evaluate $\\frac{5^5 - 5^3}{5^3}$",
+    "o": [
+     "36",
+     "30",
+     "24",
+     "15"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 165,
+    "type": "mcq",
+    "t": "If $x^9 \\times x^9 \\times x^9 \\times x^9 = (x^9)^y$, then y =",
+    "o": [
+     "4",
+     "3",
+     "9",
+     "18"
+    ],
+    "a": "A"
+   },
+   {
+    "n": 166,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $2^{44}$",
+    "B": "Value B = $4^{23}$",
+    "a": "B"
+   },
+   {
+    "n": 167,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $2^{49}$",
+    "B": "Value B = $4^{25}$",
+    "a": "B"
+   },
+   {
+    "n": 168,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $3^{75}$",
+    "B": "Value B = $2^{100}$",
+    "a": "A"
+   },
+   {
+    "n": 169,
+    "type": "cmp",
+    "p": "Compare",
+    "A": "Value A = $\\frac{1}{3} \\times 3^3$",
+    "B": "Value B = $\\left(\\frac{1}{3}\\right)^2 \\times 9$",
+    "a": "A"
+   },
+   {
+    "n": 170,
+    "type": "mcq",
+    "t": "If $4^{3n} = 256$, find $6n$",
+    "o": [
+     "4",
+     "6",
+     "8",
+     "12"
+    ],
+    "a": "C"
+   },
+   {
+    "n": 171,
+    "type": "mcq",
+    "t": "A cell divides into two every 10 minutes. How many cells after 50 minutes?",
+    "o": [
+     "36",
+     "32",
+     "70",
+     "64"
+    ],
+    "a": "B"
+   }
+  ]
+ }
+];
+
+function getLessonDuration(lesson) {
+  return lesson.qs.length + 5;
+}
+
+const state = {
+  view: 'cover',
+  lesson: '2.1',
+  answers: {},
+  quizActive: false,
+  quizSubmitted: {},
+  timeLeft: 0,
+  timerInterval: null
+};
+
+function totalQuestions() { return LESSONS.reduce((s,l)=>s+l.qs.length,0); }
+function getLesson(id) { return LESSONS.find(l=>l.id===id); }
+
+function updateGlobalStats() {
+  const solvedQuizzes = Object.keys(state.quizSubmitted).length;
+  document.getElementById('ps-answered').textContent = solvedQuizzes;
+  document.getElementById('ps-total').textContent = LESSONS.length;
+
+  let totalCorrect = 0;
+  Object.keys(state.quizSubmitted).forEach(lid => {
+    const lesson = getLesson(lid);
+    lesson.qs.forEach(q => {
+      if(state.answers[q.n] && state.answers[q.n].correct) totalCorrect++;
+    });
+  });
+  document.getElementById('ps-correct').textContent = totalCorrect;
+}
+
+function buildSidebar() {
+  const list = document.getElementById('lesson-nav-list');
+  list.innerHTML = LESSONS.map(l => {
+    const isSubmitted = !!state.quizSubmitted[l.id];
+    const active = state.lesson===l.id && state.view==='lesson' ? 'active' : '';
+    const statusText = isSubmitted ? "✅ Evaluated" : "📝 Ready";
+    return `<button class="lesson-btn ${active}" onclick="navLesson('${l.id}')">
+      <div class="lid">Lesson ${l.id}</div>
+      <div class="lsub">${l.title}</div>
+      <div class="lsub" style="color:var(--gold); font-weight:bold;">${statusText}</div>
+    </button>`;
+  }).join('');
+  updateGlobalStats();
+}
+
+function showCover() {
+  clearInterval(state.timerInterval);
+  state.view = 'cover';
+  state.quizActive = false;
+  document.getElementById('timer-chip').style.display = 'none';
+  document.getElementById('timer-chip').classList.remove('warning-timer');
+  buildSidebar();
+  const total = totalQuestions();
+  document.getElementById('main-area').innerHTML = `
+    <div id="cover">
+      <div class="cover-top">
+        <div class="cover-badge">GAT 2026 · OFFICIAL INTERACTIVE QUIZZES</div>
+        <div class="cover-title">Chapter 1: Basics &amp; Founding<br>Smart Test Bank</div>
+        <div class="cover-sub">Chapter 1 — Basics and Founding</div>
+        <div class="cover-chips">
+          <span class="cover-chip">📐 ${LESSONS.length} Interactive Lessons</span>
+          <span class="cover-chip">❓ ${total} Timed Questions</span>
+          <span class="cover-chip">⏱️ Smart Timer: 1 Min/Q + 5 Mins Extra</span>
+          <span class="cover-chip">🚨 Visual Warning Counter when &lt; 2 mins left</span>
+        </div>
+        <button class="start-btn" onclick="navLesson('1.1')">Open Lesson 1.1 Quiz →</button>
+      </div>
+      <div class="cover-bottom">
+        ${LESSONS.map(l=>`<div class="cover-stat">
+          <div class="sn">${l.qs.length}</div>
+          <div class="sl">L${l.id}</div>
+        </div>`).join('')}
+      </div>
+      <div class="cover-footer">
+        <span><strong>Mrs. Shaimaa Darwish</strong></span>
+        <span>GAT Mathematics 2026</span>
+        <span>0598582007</span>
+      </div>
+    </div>`;
+  typeset();
+}
+
+function navLesson(id) {
+  clearInterval(state.timerInterval);
+  state.lesson = id;
+  state.view = 'lesson';
+  state.quizActive = false;
+  document.getElementById('timer-chip').style.display = 'none';
+  document.getElementById('timer-chip').classList.remove('warning-timer');
+  buildSidebar();
+  renderLesson();
+}
+
+function startQuiz() {
+  const l = getLesson(state.lesson);
+  state.quizActive = true;
+  state.timeLeft = (l.qs.length * 60) + 300;
+
+  document.getElementById('timer-chip').style.display = 'flex';
+  document.getElementById('timer-chip').classList.remove('warning-timer');
+  document.getElementById('quiz-start-header').style.display = 'none';
+  document.getElementById('quiz-questions-area').style.display = 'block';
+
+  document.querySelectorAll('.opt').forEach(el => el.classList.remove('disabled'));
+
+  startTimer();
+  renderLesson();
+}
+
+function startTimer() {
+  clearInterval(state.timerInterval);
+  state.timerInterval = setInterval(() => {
+    state.timeLeft--;
+
+    if(state.timeLeft <= 120) {
+      document.getElementById('timer-chip').classList.add('warning-timer');
+    } else {
+      document.getElementById('timer-chip').classList.remove('warning-timer');
+    }
+
+    if(state.timeLeft <= 0) {
+      clearInterval(state.timerInterval);
+      state.timeLeft = 0;
+      submitQuiz(true);
+    }
+    updateTimerDisplay();
+  }, 1000);
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(state.timeLeft / 60);
+  const s = state.timeLeft % 60;
+  document.getElementById('timer-display').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+function renderLesson() {
+  const l = getLesson(state.lesson);
+  if(!l) return;
+
+  const isSubmitted = !!state.quizSubmitted[l.id];
+  const calculatedDuration = getLessonDuration(l);
+
+  let html = `
+    <div class="lesson-header">
+      <div class="lh-badge">Chapter 1 · Basics &amp; Founding · Dynamic Formula Timer</div>
+      <div class="lh-title">Lesson ${l.id} — ${l.title}</div>
+      <div class="lh-meta">
+        <span>📝 ${l.qs.length} Questions</span>
+        <span>⏱️ Total Time: ${calculatedDuration} Minutes <small>(${l.qs.length} Min + 5 Min Extra)</small></span>
+      </div>
+    </div>`;
+
+  if (isSubmitted) {
+    const scoreData = calculateLessonScore(l);
+    html += `
+      <div class="result-panel">
+        <h2>Quiz Completed!</h2>
+        <div class="result-score">${scoreData.scorePct}%</div>
+        <div class="result-meta">
+          <span>Correct: <b>${scoreData.correct}</b></span>
+          <span>Wrong/Skipped: <b>${scoreData.wrong}</b></span>
+          <span>Total Points: <b>${scoreData.correct} / ${l.qs.length}</b></span>
+        </div>
+        <button class="btn btn-teal" onclick="resetQuiz('${l.id}')">🔄 Retake Quiz</button>
+      </div>`;
+  } else if (!state.quizActive) {
+    html += `
+      <div class="result-panel" id="quiz-start-header">
+        <h3>Ready to start the quiz for Lesson ${l.id}?</h3>
+        <p style="margin: 10px 0; color: var(--muted);">You have exactly <b>${calculatedDuration} minutes</b> to finish this quiz.</p>
+        <button class="start-btn" style="margin-top:10px;" onclick="startQuiz()">⏱️ Start Quiz Now</button>
+      </div>`;
+  }
+
+  html += `<div id="quiz-questions-area" style="display: ${(!isSubmitted && !state.quizActive)? 'none':'block'}">`;
+  html += l.qs.map(q => renderQuestion(q, isSubmitted)).join('');
+  html += `</div>`;
+
+  if (state.quizActive && !isSubmitted) {
+    html += `
+      <div style="text-align:center; margin-top:20px;">
+        <button class="btn btn-red" style="padding:15px 40px; font-size:16px; border-radius:10px;" onclick="submitQuiz(false)">
+          📥 Submit &amp; Grade Quiz
+        </button>
+      </div>`;
+  }
+
+  const idx = LESSONS.findIndex(x=>x.id===state.lesson);
+  const next = idx<LESSONS.length-1 ? LESSONS[idx+1] : null;
+  html += `<div class="lesson-nav" style="margin-top:40px;">
+    <div></div>
+    ${next ? `<button class="lnav-btn next" onclick="navLesson('${next.id}')">Go to Lesson ${next.id} Quiz →</button>` : `<button class="lnav-btn next" onclick="showCover()">🏁 Back to Main Cover</button>`}
+  </div>`;
+
+  const el = document.getElementById('main-area');
+  el.innerHTML = html;
+  el.scrollTop = 0;
+
+  if(isSubmitted) {
+    const sd = calculateLessonScore(l);
+    document.getElementById('score-display').textContent = `${sd.correct} / ${l.qs.length}`;
+  } else {
+    const answeredCount = l.qs.filter(q => state.answers[q.n]).length;
+    document.getElementById('score-display').textContent = `${answeredCount} / ${l.qs.length} (Draft)`;
+  }
+
+  typeset();
+}
+
+function renderQuestion(q, isSubmitted) {
+  const isCompare = q.type==='cmp';
+  const sa = state.answers[q.n];
+  const answered = !!sa;
+  const letters = ['A','B','C','D'];
+
+  let cardClass = 'qcard';
+  if (isSubmitted && answered) {
+    cardClass += sa.correct ? ' correct-card' : ' wrong-card';
+  } else if (answered) {
+    cardClass += ' answered';
+  }
+
+  let body = '';
+  if(isCompare) {
+    body = `
+      <div style="font-weight:600;color:var(--navy);margin-bottom:8px;font-size:14px">${q.p}</div>
+      <div class="compare-box">
+        <div class="cval">
+          <div class="cval-label">Value A</div>
+          <div class="cval-expr">${q.A}</div>
+        </div>
+        <div class="cval">
+          <div class="cval-label">Value B</div>
+          <div class="cval-expr">${q.B}</div>
+        </div>
+      </div>`;
+  } else {
+    body = `<div class="qtext">${q.t}</div>`;
+  }
+
+  let figHtml = '';
+  if (q.imgData) {
+    figHtml = `<div class="qfig"><img src="${q.imgData}" alt="Figure for question ${q.n}"></div>`;
+  }
+
+  const opts = isCompare ? COMPARE_OPTS : q.o;
+  let optsHtml = opts.map((opt, i) => {
+    const letter = letters[i];
+    const isSel = sa && sa.selected===letter;
+
+    let cls = 'opt';
+    if (!state.quizActive && !isSubmitted) cls += ' disabled';
+    if (isSubmitted) cls += ' disabled';
+
+    if (isSubmitted) {
+      if (letter === q.a) cls += ' correct';
+      if (isSel && letter !== q.a) cls += ' wrong';
+    } else {
+      if (isSel) cls += ' selected';
+    }
+
+    return `<div class="${cls}" onclick="selectAnswer(${q.n},'${letter}','${q.a}')">
+      <div class="opt-bubble">${letter}</div>
+      <div>${opt}</div>
+    </div>`;
+  }).join('');
+
+  let revealHtml = '';
+  if(isSubmitted) {
+    if (answered) {
+      revealHtml = `<div class="answer-reveal" style="color:${sa.correct?'var(--green)':'var(--red)'}">
+        ${sa.correct ? '✓ Correct Answer (+1 Point)' : '✗ Incorrect Answer (0 Points)'} · Expected: <strong>${q.a}</strong>
+      </div>`;
+    } else {
+      revealHtml = `<div class="answer-reveal" style="color:var(--red)">
+        ⚠️ Skipped (0 Points) · Correct Answer is: <strong>${q.a}</strong>
+      </div>`;
+    }
+  }
+
+  return `<div class="${cardClass}" id="qcard-${q.n}">
+    <div class="qtop">
+      <div class="qnum">${q.n}</div>
+      <div style="flex:1;min-width:0">${body}</div>
+    </div>
+    ${figHtml}
+    <div class="opts">${optsHtml}</div>
+    ${revealHtml}
+  </div>`;
+}
+
+function selectAnswer(qn, letter, correct) {
+  if(!state.quizActive) return;
+  state.answers[qn] = { selected: letter, correct: letter===correct };
+
+  const l = LESSONS.find(l=>l.qs.some(q=>q.n===qn));
+  const answeredCount = l.qs.filter(q => state.answers[q.n]).length;
+  document.getElementById('score-display').textContent = `${answeredCount} / ${l.qs.length} (Draft)`;
+
+  const q = l && l.qs.find(q=>q.n===qn);
+  const el = document.getElementById(`qcard-${qn}`);
+  if(el) {
+    el.outerHTML = renderQuestion(q, false);
+    typeset(`qcard-${qn}`);
+  }
+}
+
+function submitQuiz(forcedByTimer = false) {
+  clearInterval(state.timerInterval);
+  state.quizActive = false;
+  document.getElementById('timer-chip').style.display = 'none';
+  document.getElementById('timer-chip').classList.remove('warning-timer');
+
+  state.quizSubmitted[state.lesson] = true;
+
+  if(forcedByTimer) {
+    showToast("⏱️ Time's up! Quiz submitted automatically.", "var(--red)");
+  } else {
+    showToast("📥 Your quiz has been graded successfully!", "var(--green)");
+  }
+
+  buildSidebar();
+  renderLesson();
+}
+
+function resetQuiz(lid) {
+  const l = getLesson(lid);
+  l.qs.forEach(q => {
+    delete state.answers[q.n];
+  });
+  delete state.quizSubmitted[lid];
+  navLesson(lid);
+}
+
+function calculateLessonScore(l) {
+  let correct = 0;
+  let wrong = 0;
+  l.qs.forEach(q => {
+    if(state.answers[q.n] && state.answers[q.n].correct) {
+      correct++;
+    } else {
+      wrong++;
+    }
+  });
+  const scorePct = l.qs.length ? Math.round((correct / l.qs.length) * 100) : 0;
+  return { correct, wrong, scorePct };
+}
+
+let toastTimer;
+function showToast(msg, color='#1a2e5a') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = color;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function typeset(id) {
+  if(!window.MathJax || !window._mjReady) {
+    document.addEventListener('mjready', ()=>{
+      if(id) MathJax.typesetPromise([document.getElementById(id)]).catch(()=>{});
+      else MathJax.typesetPromise().catch(()=>{});
+    }, {once:true});
+    return;
+  }
+  try {
+    if(id) {
+      const el = document.getElementById(id);
+      if(el) MathJax.typesetPromise([el]).catch(()=>{});
+    } else {
+      MathJax.typesetPromise().catch(()=>{});
+    }
+  } catch(e){}
+}
+
+// Initialization
+buildSidebar();
+showCover();
+</script>
+</body>
+</html>
